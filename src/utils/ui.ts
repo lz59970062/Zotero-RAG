@@ -307,6 +307,115 @@ function createMainContainerUi(){
         getKG()
       })
 
+      // 在 userInputAreaContainer 创建之后，添加模板按钮容器
+      const templateButtonsContainer = ztoolkit.UI.createElement(document, "div", {
+          namespace: "html",
+          classList: ["template-buttons-container"],
+          styles:{
+              boxSizing: "border-box",
+              display: "flex",
+              alignItems: "center",
+              gap: "5px",
+              height: "30px",
+              width: "90%",
+              padding: "0 10px",
+          },
+      })
+
+      // 创建模板按钮
+      const createTemplateButton = (template: {title: string, content: string}) => {
+          const button = ztoolkit.UI.createElement(document, "div", {
+              namespace: "html",
+              styles:{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "25px",
+                  padding: "0 10px",
+                  border: "1px solid rgb(172, 172, 172)",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  fontSize: "12px",
+                  backgroundColor: "#fff",
+              },
+              properties: {
+                  innerHTML: template.title
+              }
+          })
+          
+          button.addEventListener("click", () => {
+              userInputTextArea.value = template.content;
+              userInputTextArea.focus();
+          })
+          
+          return button;
+      }
+
+      // 创建模板管理按钮
+      const templateManageButton = ztoolkit.UI.createElement(document, "div", {
+          namespace: "html",
+          styles:{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "25px",
+              padding: "0 10px",
+              border: "1px solid rgb(172, 172, 172)",
+              borderRadius: "5px",
+              cursor: "pointer",
+              fontSize: "12px",
+              backgroundColor: "#f0f0f0",
+              marginLeft: "auto",
+          },
+          properties: {
+              innerHTML: "管理模板"
+          }
+      })
+
+      // 添加一些默认模板
+      const defaultTemplates = [
+          { title: "总结", content: "请总结这段内容的主要观点：" },
+          { title: "解释", content: "请解释一下这个概念：" },
+          { title: "对比", content: "请对比分析以下几个观点的异同：" },
+      ]
+
+      // 将模板按钮添加到容器
+      defaultTemplates.forEach(template => {
+          templateButtonsContainer.appendChild(createTemplateButton(template));
+      })
+      templateButtonsContainer.appendChild(templateManageButton);
+
+      // 将模板按钮容器添加到输入区域
+      userInputAreaContainer.insertBefore(templateButtonsContainer, userInputTextArea);
+
+      // 添加模板管理功能
+      templateManageButton.addEventListener("click", () => {
+          const win = ztoolkit.getGlobal("window");
+          const dialog = win.openDialog(
+              "chrome://zotero/content/dialog.xul",
+              "template-manager",
+              "chrome,centerscreen,modal",
+              {
+                  title: "模板管理",
+                  templates: defaultTemplates,
+                  onConfirm: (updatedTemplates: typeof defaultTemplates) => {
+                      // 清空现有模板按钮
+                      while (templateButtonsContainer.firstChild) {
+                          if (templateButtonsContainer.lastChild === templateManageButton) break;
+                          templateButtonsContainer.removeChild(templateButtonsContainer.firstChild);
+                      }
+                      // 添加更新后的模板按钮
+                      updatedTemplates.forEach(template => {
+                          templateButtonsContainer.insertBefore(
+                              createTemplateButton(template),
+                              templateManageButton
+                          );
+                      });
+                  }
+              }
+          );
+      });
+
     return mainContainer
 }
 
