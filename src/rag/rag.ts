@@ -25,7 +25,7 @@ async function llm_model_func(
         lightRagConfig['LLM_BASE_API_URL'],
         lightRagConfig['LLM_API_KEY'],
         kwargs,
-        setNewLLMInfoFunc
+        // setNewLLMInfoFunc
     )
 }
 
@@ -35,7 +35,7 @@ async function embedding_func(texts: string[]) {
         lightRagConfig['EMBEDDING_MODEL_BASE_API_URL'],
         lightRagConfig['EMBEDDING_MODEL_API_KEY'],
         lightRagConfig['EMBEDDING_MODEL'],
-        setNewEmbeddingInfoFunc
+        // setNewEmbeddingInfoFunc
     )
 }
 

@@ -106,8 +106,8 @@ async function getItemPdfContent(itemId:number):Promise<string> {
     const _attachmentName =_attachmentItem.attachmentPath.replace("storage:", "")
     const pdfUrl = dataDir + "\\\\storage\\\\" + `${attachmentKey}\\` + _attachmentName
     const uint8Array = await IOUtils.read(pdfUrl)
-    // const pdfJs = await import('pdfjs-dist/build/pdf');
-    const pdfJs = await import('../pdf/pdfjs-dist');
+    const pdfJs = await import('pdfjs-dist/build/pdf');
+    // const pdfJs = await import('../pdf/pdfjs-dist');
     // const pdfjsWorker = await import('pdfjs-dist/build/pdf.worker.entry');
     pdfJs.GlobalWorkerOptions.workerSrc = `chrome://${config.addonRef}/content/pdf.worker.js`
     const pdfDoc = await pdfJs.getDocument({ data: uint8Array }).promise;

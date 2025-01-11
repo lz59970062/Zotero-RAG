@@ -71,7 +71,7 @@ async function onMainWindowLoad(win: Window): Promise<void> {
 
 
 
-  await Zotero.Promise.delay(1000);
+  // await Zotero.Promise.delay(1000);
 
 }
 

@@ -406,7 +406,7 @@ export class UIExampleFactory {
         setSectionButtonStatus,
       }) => {
         console.log("Section secondary render start!", item?.id);
-        await Zotero.Promise.delay(1000);
+        // await Zotero.Promise.delay(1000);
         console.log("Section secondary render finish!", item?.id);
         
         setL10nArgs(`{ "status": "Loaded" }`);
@@ -537,7 +537,12 @@ export class PromptExampleFactory {
           const s = new Zotero.Search();
           s.addCondition("quicksearch-titleCreatorYear", "contains", text);
           s.addCondition("itemType", "isNot", "attachment");
-          let ids = await s.search();
+          // let ids = await s.search();
+          let ids = await new Promise( (resolve) => {
+            (s.search() as unknown as Promise<number[]>).then((a: number[])=>{
+              resolve(a);
+            });
+          }) as number[];
           // prompt.exit will remove current container element.
           // @ts-ignore ignore
           prompt.exit();
@@ -584,7 +589,7 @@ export class PromptExampleFactory {
               }
             });
             if (hasValidCondition) {
-              ids = await s.search();
+              ids = await (s.search() as unknown as Promise<number[]>);
             }
           }
           ids = filter(ids);
